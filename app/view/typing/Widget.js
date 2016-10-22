@@ -96,7 +96,11 @@ Ext.define('TypinApp.view.typing.Widget',{
                 })*/
 
                 me.displayField = new Ext.form.field.Display({
-                    xtype: 'displayfield'/*,
+                    xtype: 'displayfield'
+                    /*renderer: function (value, field) {
+                        return '<h2>' + value + '<h2>';
+                    }*/
+                    /*,
                     fieldLabel: 'Text',
                     bind: {
                         value: '{name}'

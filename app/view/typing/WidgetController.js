@@ -1,5 +1,6 @@
 var index = 0,
-    originalValue;
+    originalValue,
+    correctValue;
 
 Ext.define('TypinApp.view.typing.WidgetController', {
     extend: 'Ext.app.ViewController',
@@ -22,29 +23,31 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         if(splitValue[pos] == typedValue[pos]){
             index++;
-            this.changeColor(typedValue, true);
+            correctValue = typedValue;
+            this.changeColor(typedValue, false);
         } else {
-            this.changeColor(typedValue, false)
+            this.changeColor(typedValue, true)
         }
     },
 
-    changeColor: function (typedValue, correct) {
+    changeColor: function (typedValue, mistyped) {
         var me = this.getView(),
-            correctValue = typedValue.length;
+            valueLength = typedValue.length;
 
-        if(correct){
+        if(mistyped){
             me.displayField.setValue(
                 '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
-                originalValue.substring(0, correctValue) +
+                originalValue.substring(0, correctValue.length) +
                 '</span>' +
-                originalValue.substring(correctValue));
+                '<span style="color:red">' + originalValue.substring(correctValue.length) + '</span>');
         } else {
             me.displayField.setValue(
                 '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
-                originalValue.substring(0, correctValue - 1) +
+                originalValue.substring(0, valueLength) +
                 '</span>' +
-                '<span style="color:red">' + originalValue.substring(correctValue - 1) + '</span>');
+                originalValue.substring(valueLength));
         }
+
     },
 
     selectChapter: function (combo, record) {
@@ -56,8 +59,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         me.displayField.applyBind({
             value: '{test}'
         });
-
-
 
         /*Ext.Ajax.request({
             url: 'resources/Mocks',
