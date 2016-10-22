@@ -1,10 +1,11 @@
-
 Ext.define('TypinApp.view.typing.Widget',{
     extend: 'Ext.panel.Panel',
 
     requires: [
         'TypinApp.view.typing.WidgetController',
-        'TypinApp.view.typing.WidgetModel'
+        'TypinApp.view.typing.WidgetModel',
+        'Ext.ux.LiveSearchGridPanel',
+        'TypinApp.store.Versete'
     ],
 
     controller: 'typing-widget',
@@ -78,18 +79,44 @@ Ext.define('TypinApp.view.typing.Widget',{
                         }
                     ]
                 }),
-                {
-                    xtype: 'displayfield',
-                    fieldLabel: 'Text'
-                },
-                {
-                    xtype: 'textarea',
+                /*me.grid = Ext.create('Ext.ux.LiveSearchGridPanel', {
+                    store: Ext.create('TypinApp.store.Versete'),
+                    columnLines: true,
+                    columns: [
+                        {
+                            flex     : 1,
+                            dataIndex: 'verset'
+                        }
+                    ],
+                    height: 350,
+                    width: 800,
+                    viewConfig: {
+                        stripeRows: false
+                    }
+                })*/
+
+                me.displayField = new Ext.form.field.Display({
+                    xtype: 'displayfield'/*,
+                    fieldLabel: 'Text',
+                    bind: {
+                        value: '{name}'
+                    }*/
+                }),
+                me.textarea = new Ext.form.field.TextArea({
                     cls: 'typing-area',
                     width: '100%'
-                }
+                })
             ]
         });
 
         me.callParent();
+    },
+
+    initEvents: function () {
+        var me = this;
+        
+        me.textarea.on({
+            change: 'isTyping'
+        })
     }
 });
