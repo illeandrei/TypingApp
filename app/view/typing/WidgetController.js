@@ -1,33 +1,86 @@
 var index = 0,
     originalValue,
-    correctValue;
+    correctValue,
+    errorCount = 0;
 
 Ext.define('TypinApp.view.typing.WidgetController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.typing-widget',
 
     isTyping: function (field , newValue) {
-        var me = this.getView(),
-            typedValue = newValue.split(''),
-            pos = typedValue.length - 1;
+        var me = this,
+            view = me.getView(),
+            typedValue = newValue.split('');
 
         if(index == 0){
-            originalValue = me.displayField.getValue();
-            console.warn('original value: ', originalValue);
+            originalValue = view.displayField.getValue();
         } else {
-            me.displayField.setValue(originalValue);
+            view.displayField.setValue(originalValue);
         }
 
-        var displayValue = me.displayField.getValue(),
-            splitValue = displayValue.split('');
-
-        if(splitValue[pos] == typedValue[pos]){
+        if(originalValue.substring(0, typedValue.length) == newValue.substring(0)){
             index++;
             correctValue = typedValue;
-            this.changeColor(typedValue, false);
+            me.changeColor(typedValue, false);
         } else {
-            this.changeColor(typedValue, true)
+            errorCount++;
+            me.changeColor(typedValue, true)
         }
+
+        if(newValue.length == originalValue.length){
+            //TODO: trigger on some other condition
+            me.showResults(me.wordsMinute());
+        }
+    },
+
+    wordsMinute: function () {
+        return originalValue
+            .split(/(\s+)/)
+            .filter(function (word) {
+                return word != ' ';
+            })
+            .length;
+    },
+
+    showResults: function (wordCount) {
+        var me = this,
+            view = this.getView();
+
+        view.resultWindow = new Ext.window.Window({
+            modal: true,
+            width: 400,
+            height: 200,
+            bind: {
+                title: '{resultWindowTitle}'
+            },
+            bbar: [
+                '->',
+                {
+                    xtyep: 'button',
+                    text: 'OK',
+                    handler: function () {
+                        view.resultWindow.close();
+                        view.textarea.setValue('');
+                        me.selectChapter();
+                    }
+                }
+            ],
+            items: [
+                {
+                    xtype: 'displayfield',
+                    bind: {
+                        fieldLabel: '{errorCount}'
+                    },
+                    value: errorCount
+                },{
+                    xtype: 'displayfield',
+                    bind: {
+                        fieldLabel: '{errorCount}'
+                    },
+                    value: wordCount
+                }
+            ]
+        }).show();
     },
 
     changeColor: function (typedValue, mistyped) {
@@ -55,6 +108,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         
         console.warn('form values: ', me.comboForm.getForm().getValues());
 
+        me.textarea.enable();
         me.textarea.focus();
         me.displayField.applyBind({
             value: '{test}'

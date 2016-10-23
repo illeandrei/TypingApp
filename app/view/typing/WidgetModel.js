@@ -6,6 +6,10 @@ Ext.define('TypinApp.view.typing.WidgetModel', {
 
         mocks: 'Astfel au fost sfârşite cerurile şi pământul, şi toată oştirea lor.',
 
-        test: 'cartofi de vanzare'
+        test: 'cartofi de vanzare',
+
+        resultWindowTitle: 'Results',
+
+        errorCount: 'Error Count'
     }
 });
