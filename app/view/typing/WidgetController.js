@@ -1,7 +1,7 @@
 var index = 0,
+    errorCount = 0,
     originalValue,
-    correctValue,
-    errorCount = 0;
+    correctValue;
 
 Ext.define('TypinApp.view.typing.WidgetController', {
     extend: 'Ext.app.ViewController',
@@ -15,11 +15,9 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         //TODO: remove span if value is empty
         /*if(newValue == ''){
-            view.displayField.setValue(originalValue);
-            me.resetValeu();
+            console.warn('new value now: ', newValue);
+            me.resetValue();
         }*/
-
-        var typedValue = newValue.split('');
 
         if(index == 0){
             originalValue = view.displayField.getValue();
@@ -27,13 +25,13 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             me.resetValue();
         }
 
-        if(originalValue.substring(0, typedValue.length) == newValue.substring(0)){
+        if(originalValue.substring(0, newValue.length) == newValue.substring(0)){
             index++;
-            correctValue = typedValue;
-            me.changeColor(typedValue, false);
+            correctValue = newValue;
+            me.changeColor(newValue, false);
         } else {
             errorCount++;
-            me.changeColor(typedValue, true)
+            me.changeColor(newValue, true)
         }
 
         if(newValue.length == originalValue.length){
@@ -81,9 +79,9 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         view.resultWindow.initKeyMap();
     },
 
-    changeColor: function (typedValue, mistyped) {
+    changeColor: function (newValue, mistyped) {
         var view = this.getView(),
-            valueLength = typedValue.length;
+            valueLength = newValue.length;
 
         if(mistyped){
             view.displayField.setValue(
