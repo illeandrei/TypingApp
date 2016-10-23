@@ -11,6 +11,8 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         var me = this,
             view = me.getView();
 
+        me.togglePanel(false);
+
         //TODO: remove span if value is empty
         /*if(newValue == ''){
             view.displayField.setValue(originalValue);
@@ -22,7 +24,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         if(index == 0){
             originalValue = view.displayField.getValue();
         } else {
-            // view.displayField.setValue(originalValue);
             me.resetValue();
         }
 
@@ -37,13 +38,27 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         if(newValue.length == originalValue.length){
             //TODO: trigger on some other condition
-            me.showResults(me.wordsMinute());
+            me.showResults();
         }
     },
 
     resetValue: function () {
         var view = this.getView();
         view.displayField.setValue(originalValue);
+    },
+
+    restartApp: function () {
+        var me           = this,
+            view         = me.getView(),
+            chapterCombo = Ext.getCmp('chapterCombo'),
+            textarea     = view.textarea;
+
+        //TODO: see if my 'originalValue' can be replaced
+        view.resultWindow.close();
+        textarea.setValue(textarea.originalValue);
+        me.resetValue();
+        me.togglePanel(true);
+        chapterCombo.focus(null, 500);
     },
 
     wordsMinute: function () {
@@ -55,44 +70,15 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             .length;
     },
 
-    showResults: function (wordCount) {
+    showResults: function () {
         var me = this,
             view = this.getView();
 
-        view.resultWindow = new Ext.window.Window({
-            modal: true,
-            width: 400,
-            height: 200,
-            bind: {
-                title: '{resultWindowTitle}'
-            },
-            bbar: [
-                '->',
-                {
-                    xtyep: 'button',
-                    text: 'OK',
-                    handler: function () {
-                        view.resultWindow.close();
-                        me.restart();
-                    }
-                }
-            ],
-            items: [
-                {
-                    xtype: 'displayfield',
-                    bind: {
-                        fieldLabel: '{errorCount}'
-                    },
-                    value: errorCount
-                },{
-                    xtype: 'displayfield',
-                    bind: {
-                        fieldLabel: '{wordCount}'
-                    },
-                    value: wordCount
-                }
-            ]
-        }).show();
+        // var wordCount = me.wordsMinute();
+
+        //TODO: restart app on Enter
+        view.resultWindow.show();
+        view.resultWindow.initKeyMap();
     },
 
     changeColor: function (typedValue, mistyped) {
@@ -119,30 +105,27 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
     },
 
-    restart: function () {
-        var me           = this,
-            view         = me.getView(),
-            panel        = Ext.getCmp('northPanel'),
-            chapterCombo = Ext.getCmp('chapterCombo'),
-            textarea     = view.textarea;
-
-        //TODO: see if my 'originalValue' can be replaced
-        textarea.setValue(textarea.originalValue);
-        me.resetValue();
-        panel.expand();
-        chapterCombo.focus(null, 500);
-    },
-
-    selectChapter: function (combo, record) {
+    togglePanel: function (show) {
         var me = this.getView(),
             panel = Ext.getCmp('northPanel');
 
-        panel.collapse();
+        if(show){
+            panel.expand();
+        } else {
+            panel.collapse();
+        }
+    },
+
+    selectChapter: function (combo, record) {
+        var me = this,
+            view = this.getView();
+
+        me.togglePanel(false);
 
         Ext.Function.defer(function () {
-            me.textarea.enable();
-            me.textarea.focus();
-            me.displayField.applyBind({
+            view.textarea.enable();
+            view.textarea.focus();
+            view.displayField.applyBind({
                 value: '{test}'
             });
         }, 500);

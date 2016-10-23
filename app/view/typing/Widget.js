@@ -55,6 +55,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                                     fieldLabel: 'Book',
                                     valueField: 'abbr',
                                     padding: '0 20 0 0',
+                                    emptyText: 'Select Book',
                                     store: {
                                         fields: ['abbr', 'name'],
                                         data : [
@@ -76,6 +77,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                                     fieldLabel: 'Chapter',
                                     id: 'chapterCombo',
                                     cls: 'chapter',
+                                    emptyText: 'Select Chapter',
                                     store: {
                                         fields: ['name'],
                                         data : [
@@ -110,22 +112,47 @@ Ext.define('TypinApp.view.typing.Widget',{
                             padding: '0 0 0 10'
                         }),
                         me.textarea = new Ext.form.field.TextArea({
-                            // cls: 'typing-area',
-                            disabled: true
+                            disabled: true,
+                            emptyText: 'Start typing...',
+                            listeners: {
+                                change: 'isTyping'
+                            }
                         })
                     ]
-                }
+                },
+                me.resultWindow = new Ext.window.Window({
+                    modal: true,
+                    width: 400,
+                    height: 200,
+                    keyMapEnabled: true,
+                    bind: {
+                        title: '{resultWindowTitle}'
+                    },
+                    bbar: [
+                        '->',
+                        {
+                            xtyep: 'button',
+                            text: 'OK',
+                            handler: 'restartApp'
+                        }
+                    ],
+                    items: [
+                        {
+                            xtype: 'displayfield',
+                            bind: {
+                                fieldLabel: '{errorCount}'
+                            }
+                        },{
+                            xtype: 'displayfield',
+                            bind: {
+                                fieldLabel: '{wordCount}'
+                            }
+                        }
+                    ]
+                })
             ]
         });
 
         me.callParent();
-    },
-
-    initEvents: function () {
-        var me = this;
-
-        me.textarea.on({
-            change: 'isTyping'
-        })
     }
 });
