@@ -1,17 +1,20 @@
 .widget {
 
-  .comboForm {
-    padding: 10px 0 40px 0;
-
-    .chapter {
-      padding-left: 20px;
+  .display-field {
+    .x-form-display-field,
+    .x-form-display-field-default {
+      font-size: 20px;
     }
   }
 
-  .typing-area {
-    .x-form-trigger-wrap {
-      border-radius: 3px;
-    }
+  .change-green {
+    color: green;
+    border: 1px solid grey;
+    border-radius: 3px;
+  }
+
+  .change-red {
+    color: red;
   }
 
 }

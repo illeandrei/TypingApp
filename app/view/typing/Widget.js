@@ -14,7 +14,7 @@ Ext.define('TypinApp.view.typing.Widget',{
         type: 'typing-widget'
     },
 
-    // cls: 'widget',
+    cls: 'widget',
 
     layout: 'border',
     width: 500,
@@ -33,7 +33,7 @@ Ext.define('TypinApp.view.typing.Widget',{
         Ext.apply(me, {
             items: [
                 {
-                    id: 'NorthPanel',
+                    id: 'northPanel',
                     title: 'Typing App',
                     region: 'north',
                     height: 150,
@@ -106,6 +106,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                     },
                     items: [
                         me.displayField = new Ext.form.field.Display({
+                            cls: 'display-field',
                             padding: '0 0 0 10'
                         }),
                         me.textarea = new Ext.form.field.TextArea({

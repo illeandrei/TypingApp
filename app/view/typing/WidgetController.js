@@ -101,16 +101,20 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         if(mistyped){
             view.displayField.setValue(
-                '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
-                originalValue.substring(0, correctValue.length) +
-                '</span>' +
-                '<span style="color:red">' + originalValue.substring(correctValue.length) + '</span>');
+                    '<span class="change-green">' +
+                        originalValue.substring(0, correctValue.length) +
+                    '</span>' +
+                    '<span class="change-red">' +
+                        originalValue.substring(correctValue.length) +
+                    '</span>'
+            );
         } else {
             view.displayField.setValue(
-                '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
-                originalValue.substring(0, valueLength) +
-                '</span>' +
-                originalValue.substring(valueLength));
+                    '<span class="change-green">' +
+                        originalValue.substring(0, valueLength) +
+                    '</span>' +
+                        originalValue.substring(valueLength)
+            );
         }
 
     },
@@ -118,7 +122,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     restart: function () {
         var me           = this,
             view         = me.getView(),
-            panel        = Ext.getCmp('NorthPanel'),
+            panel        = Ext.getCmp('northPanel'),
             chapterCombo = Ext.getCmp('chapterCombo'),
             textarea     = view.textarea;
 
@@ -131,7 +135,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
     selectChapter: function (combo, record) {
         var me = this.getView(),
-            panel = Ext.getCmp('NorthPanel');
+            panel = Ext.getCmp('northPanel');
 
         panel.collapse();
 
