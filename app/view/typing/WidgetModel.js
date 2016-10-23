@@ -10,6 +10,8 @@ Ext.define('TypinApp.view.typing.WidgetModel', {
 
         resultWindowTitle: 'Results',
 
-        errorCount: 'Error Count'
+        errorCount: 'Error Count',
+
+        wordCount: 'Word Count'
     }
 });

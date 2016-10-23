@@ -9,13 +9,21 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
     isTyping: function (field , newValue) {
         var me = this,
-            view = me.getView(),
-            typedValue = newValue.split('');
+            view = me.getView();
+
+        //TODO: remove span if value is empty
+        /*if(newValue == ''){
+            view.displayField.setValue(originalValue);
+            me.resetValeu();
+        }*/
+
+        var typedValue = newValue.split('');
 
         if(index == 0){
             originalValue = view.displayField.getValue();
         } else {
-            view.displayField.setValue(originalValue);
+            // view.displayField.setValue(originalValue);
+            me.resetValue();
         }
 
         if(originalValue.substring(0, typedValue.length) == newValue.substring(0)){
@@ -31,6 +39,11 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             //TODO: trigger on some other condition
             me.showResults(me.wordsMinute());
         }
+    },
+
+    resetValue: function () {
+        var view = this.getView();
+        view.displayField.setValue(originalValue);
     },
 
     wordsMinute: function () {
@@ -60,8 +73,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
                     text: 'OK',
                     handler: function () {
                         view.resultWindow.close();
-                        view.textarea.setValue('');
-                        me.selectChapter();
+                        me.restart();
                     }
                 }
             ],
@@ -75,7 +87,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
                 },{
                     xtype: 'displayfield',
                     bind: {
-                        fieldLabel: '{errorCount}'
+                        fieldLabel: '{wordCount}'
                     },
                     value: wordCount
                 }
@@ -84,17 +96,17 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     changeColor: function (typedValue, mistyped) {
-        var me = this.getView(),
+        var view = this.getView(),
             valueLength = typedValue.length;
 
         if(mistyped){
-            me.displayField.setValue(
+            view.displayField.setValue(
                 '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
                 originalValue.substring(0, correctValue.length) +
                 '</span>' +
                 '<span style="color:red">' + originalValue.substring(correctValue.length) + '</span>');
         } else {
-            me.displayField.setValue(
+            view.displayField.setValue(
                 '<span style="color:green; border: 1px solid grey; border-radius: 3px;">' +
                 originalValue.substring(0, valueLength) +
                 '</span>' +
@@ -103,16 +115,33 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
     },
 
-    selectChapter: function (combo, record) {
-        var me = this.getView();
-        
-        console.warn('form values: ', me.comboForm.getForm().getValues());
+    restart: function () {
+        var me           = this,
+            view         = me.getView(),
+            panel        = Ext.getCmp('NorthPanel'),
+            chapterCombo = Ext.getCmp('chapterCombo'),
+            textarea     = view.textarea;
 
-        me.textarea.enable();
-        me.textarea.focus();
-        me.displayField.applyBind({
-            value: '{test}'
-        });
+        //TODO: see if my 'originalValue' can be replaced
+        textarea.setValue(textarea.originalValue);
+        me.resetValue();
+        panel.expand();
+        chapterCombo.focus(null, 500);
+    },
+
+    selectChapter: function (combo, record) {
+        var me = this.getView(),
+            panel = Ext.getCmp('NorthPanel');
+
+        panel.collapse();
+
+        Ext.Function.defer(function () {
+            me.textarea.enable();
+            me.textarea.focus();
+            me.displayField.applyBind({
+                value: '{test}'
+            });
+        }, 500);
 
         /*Ext.Ajax.request({
             url: 'resources/Mocks',

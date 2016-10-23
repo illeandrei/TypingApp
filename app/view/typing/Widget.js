@@ -33,6 +33,7 @@ Ext.define('TypinApp.view.typing.Widget',{
         Ext.apply(me, {
             items: [
                 {
+                    id: 'NorthPanel',
                     title: 'Typing App',
                     region: 'north',
                     height: 150,
@@ -73,6 +74,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                                 },
                                 {
                                     fieldLabel: 'Chapter',
+                                    id: 'chapterCombo',
                                     cls: 'chapter',
                                     store: {
                                         fields: ['name'],
