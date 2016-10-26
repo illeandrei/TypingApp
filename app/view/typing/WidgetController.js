@@ -76,7 +76,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         //TODO: restart app on Enter
         view.resultWindow.show();
-        view.resultWindow.initKeyMap();
     },
 
     changeColor: function (newValue, mistyped) {
@@ -114,37 +113,54 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         }
     },
 
+    selectBook: function (combo, record) {
+        var me = this,
+            view = me.getView(),
+            arr = [];
+
+        for(var i=1; i<=record.get('chapters'); i++){
+            arr.push([i]);
+        }
+
+        view.chapterCombo.getStore().loadRawData(arr);
+        view.chapterCombo.focus();
+    },
+
     selectChapter: function (combo, record) {
         var me = this,
             view = this.getView();
 
         me.togglePanel(false);
 
-        Ext.Function.defer(function () {
+        /*Ext.Function.defer(function () {
             view.textarea.enable();
             view.textarea.focus();
             view.displayField.applyBind({
                 value: '{test}'
             });
-        }, 500);
+        }, 500);*/
 
-        /*Ext.Ajax.request({
-            url: 'resources/Mocks',
-            success: function (response) {
-                console.warn('success: ', response); 
-            },
-            failure: function (response) {
-                console.warn('failure: ', response);
+        var params = view.comboForm.getForm().getValues();
+        console.warn('params: ', params);
+
+        Ext.apply(params, {
+            action: 'get_chapter',
+            references: true,
+            titles: true
+        });
+
+        var store = new Ext.data.Store({
+            //TODO: add model
+            proxy: {
+                type: 'ajax',
+                url: 'http://app.bibliaonline.ro/servlets/chapters.php',
+                extraParams: params
             }
-        });*/
+        });
 
-        // form.submit({
-        //     url: '',
-        //     method: 'GET',
-        //     headers: {
-        //         'Origin': 'http://localhost:8080'
-        //     }
-        // })
+        store.load();
+
+        console.warn('store data: ', store.getData());
 
     }
     

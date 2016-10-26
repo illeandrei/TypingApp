@@ -5,7 +5,8 @@ Ext.define('TypinApp.view.typing.Widget',{
         'TypinApp.view.typing.WidgetController',
         'TypinApp.view.typing.WidgetModel',
         'Ext.ux.LiveSearchGridPanel',
-        'TypinApp.store.Versete',
+        'TypinApp.store.Books',
+        'TypinApp.store.Chapters',
         'Ext.layout.container.Border'
     ],
 
@@ -44,57 +45,33 @@ Ext.define('TypinApp.view.typing.Widget',{
                             layout: 'hbox',
                             cls: 'comboForm',
                             defaults: {
-                                xtype: 'combobox',
                                 displayField: 'name',
                                 queryMode: 'local',
                                 labelWidth: 50,
                                 flex: 1
                             },
                             items: [
-                                {
-                                    fieldLabel: 'Book',
-                                    valueField: 'abbr',
+                                me.bookCombo = new Ext.form.field.ComboBox({
+                                    displayField: 'name',
+                                    valueField: 'id',
+                                    name: 'book',
                                     padding: '0 20 0 0',
                                     emptyText: 'Select Book',
                                     store: {
-                                        fields: ['abbr', 'name'],
-                                        data : [
-                                            {
-                                                "abbr":"1",
-                                                "name":"Geneza"
-                                            },
-                                            {
-                                                "abbr":"2",
-                                                "name":"Ioan"
-                                            },{
-                                                "abbr":"3",
-                                                "name":"Apocalipsa"
-                                            }
-                                        ]
+                                        type: 'books'
                                     }
-                                },
-                                {
-                                    fieldLabel: 'Chapter',
+                                }),
+                                me.chapterCombo = new Ext.form.field.ComboBox({
+                                    displayField: 'chapters',
+                                    valueField: 'chapters',
+                                    name: 'chapter',
                                     id: 'chapterCombo',
                                     cls: 'chapter',
                                     emptyText: 'Select Chapter',
                                     store: {
-                                        fields: ['name'],
-                                        data : [
-                                            {
-                                                "name":"1"
-                                            },
-                                            {
-                                                "name":"2"
-                                            },{
-                                                "name":"3"
-                                            }
-                                        ]
-                                    },
-                                    listeners: {
-                                        select: 'selectChapter'
+                                        type: 'chapters'
                                     }
-                                }
+                                })
                             ]
                         })
                     ]
@@ -154,5 +131,19 @@ Ext.define('TypinApp.view.typing.Widget',{
         });
 
         me.callParent();
+    },
+    
+    initEvents: function () {
+        var me = this;
+        me.callParent();
+                
+        me.bookCombo.on({
+            select: 'selectBook'
+        });
+
+        me.chapterCombo.on({
+            select: 'selectChapter'
+        });
+            
     }
 });

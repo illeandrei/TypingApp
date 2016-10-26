@@ -1,0 +1,4 @@
+RewriteEngine On
+
+#RewriteRule ^/?gw-terminology-web/(.*)$ api/mocks/gw-terminology-web/$1.json [L]
+
