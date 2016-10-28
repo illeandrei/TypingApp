@@ -40,7 +40,15 @@ Ext.define('TypinApp.view.typing.Widget',{
                     height: 150,
                     minHeight: 50,
                     maxHeight: 100,
+                    layout: 'hbox',
                     items: [
+                        me.accentsCheckBox = new Ext.form.field.Checkbox({
+                            boxLabel  : 'Accents',
+                            name      : 'accents',
+                            inputValue: '1',
+                            id        : 'checkbox',
+                            padding: '0 20 0 0'
+                        }),
                         me.comboForm = new Ext.form.Panel({
                             layout: 'hbox',
                             cls: 'comboForm',

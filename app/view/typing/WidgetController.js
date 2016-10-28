@@ -134,20 +134,14 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
     selectChapter: function (combo, record) {
         var me = this,
-            view = this.getView();
+            view = this.getView(),
+            vers = [],
+            accents = view.accentsCheckBox.getValue();
+            params = view.comboForm.getForm().getValues();
 
         me.togglePanel(false);
-
-        /*Ext.Function.defer(function () {
-            view.textarea.enable();
-            view.textarea.focus();
-            view.displayField.applyBind({
-                value: '{test}'
-            });
-        }, 500);*/
-
-        var params = view.comboForm.getForm().getValues();
-        console.warn('params: ', params);
+        
+        console.warn('accents: ', accents);
 
         Ext.apply(params, {
             action: 'get_chapter',
@@ -156,7 +150,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         });
 
         var store = new Ext.data.Store({
-            //TODO: add model
             proxy: {
                 type: 'ajax',
                 url: './servlets/chapters.php',
@@ -164,10 +157,36 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             }
         });
 
-        store.load();
+        store.load(function (records) {
+            var data = records[0].get('data');
+            data.forEach(function (array) {
+                vers.push(array[3]);
+            });
 
-        console.warn('store data: ', store.getData());
+            Ext.Function.defer(function () {
+                view.textarea.enable();
+                view.textarea.focus();
+                if(accents){
+                    view.displayField.setValue(vers[0]);
+                } else {
+                    view.displayField.setValue(me.removeAccentsL(vers[0]));
+                }
+             }, 500);
+        });
+    },
 
+    removeAccentsL: function(str) {
+        var convMap = {
+            "ă" : "a",
+            "â" : "a",
+            "ş" : "s",
+            "ţ" : "t",
+            "î" : "i"
+        };
+        for (var i in convMap) {
+            str = str.replace(new RegExp(i, "g"), convMap[i]);
+        }
+        return str;
     }
     
 });
