@@ -1,5 +1,3 @@
 RewriteEngine On
 
-#RewriteRule ^/?gw-terminology-web/(.*)$ api/mocks/gw-terminology-web/$1.json [L]
-RewriteRule ^/?TypingApp/(.*)$ http://app.bibliaonline.ro/servlets/chapters.php/$1.json [L]
-
+ RewriteRule ^/?servlets/chapters.php(.*)$ http://app.bibliaonline.ro/servlets/chapters.php$1 [L,P]

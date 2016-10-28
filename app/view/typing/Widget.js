@@ -133,7 +133,6 @@ Ext.define('TypinApp.view.typing.Widget',{
         me.callParent();
     },
 
-    //changes to widget
     initEvents: function () {
         var me = this;
         me.callParent();

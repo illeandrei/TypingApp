@@ -75,6 +75,12 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         // var wordCount = me.wordsMinute();
 
         //TODO: restart app on Enter
+        //TODO: add results to result screen
+        /*view.resultWindow.add({
+            xtype: 'gauge',
+            flex: 1,
+            value: errorCount
+        });*/
         view.resultWindow.show();
     },
 
@@ -153,7 +159,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             //TODO: add model
             proxy: {
                 type: 'ajax',
-                url: 'http://app.bibliaonline.ro/servlets/chapters.php',
+                url: './servlets/chapters.php',
                 extraParams: params
             }
         });
