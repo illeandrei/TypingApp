@@ -1,7 +1,9 @@
 var index = 0,
     errorCount = 0,
     originalValue,
-    correctValue;
+    displayedValue,
+    correctValue,
+    verses = [];
 
 Ext.define('TypinApp.view.typing.WidgetController', {
     extend: 'Ext.app.ViewController',
@@ -36,8 +38,19 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         if(newValue.length == originalValue.length){
             //TODO: trigger on some other condition
-            me.showResults();
+            // me.showResults();
+            me.appendText();
         }
+    },
+
+    appendText: function () {
+        var me = this,
+            view = me.getView();
+
+        originalValue = verses[0].concat(" " + me.removeAccentsL(verses[1]));
+
+        view.displayField.setValue(originalValue);
+        view.inactiveDisplay.setValue(me.removeAccentsL(verses[2]))
     },
 
     resetValue: function () {
@@ -141,8 +154,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         me.togglePanel(false);
         
-        console.warn('accents: ', accents);
-
         Ext.apply(params, {
             action: 'get_chapter',
             references: true,
@@ -158,21 +169,36 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         });
 
         store.load(function (records) {
-            var data = records[0].get('data');
-            data.forEach(function (array) {
-                vers.push(array[3]);
-            });
-
-            Ext.Function.defer(function () {
-                view.textarea.enable();
-                view.textarea.focus();
-                if(accents){
-                    view.displayField.setValue(vers[0]);
-                } else {
-                    view.displayField.setValue(me.removeAccentsL(vers[0]));
-                }
-             }, 500);
+            console.warn('records: ', records); 
+            me.manageData(accents, records);
         });
+    },
+
+    manageData: function (accents, records) {
+        verses = [];
+        var me = this,
+            view = me.getView(),
+            data = records[0].get('data');
+
+        data.forEach(function (array) {
+            verses.push(array[3]);
+        });
+
+        Ext.Function.defer(function () {
+            view.textarea.enable();
+            view.textarea.focus();
+            if(accents){
+                me.displayText(verses[0], verses[1]);
+            } else {
+                me.displayText(me.removeAccentsL(verses[0]), me.removeAccentsL(verses[1]));
+            }
+        }, 500);
+    },
+    
+    displayText: function (firstSection, secondSection) {
+        var view = this.getView();
+        view.displayField.setValue(firstSection);
+        view.inactiveDisplay.setValue(secondSection);
     },
 
     removeAccentsL: function(str) {
@@ -180,8 +206,11 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             "ă" : "a",
             "â" : "a",
             "ş" : "s",
+            "Ş" : "S",
             "ţ" : "t",
-            "î" : "i"
+            "Ț" : "T",
+            "î" : "i",
+            "Î" : "I"
         };
         for (var i in convMap) {
             str = str.replace(new RegExp(i, "g"), convMap[i]);

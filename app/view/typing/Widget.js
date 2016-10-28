@@ -43,7 +43,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                     layout: 'hbox',
                     items: [
                         me.accentsCheckBox = new Ext.form.field.Checkbox({
-                            boxLabel  : 'Accents',
+                            boxLabel  : 'Language Accents',
                             name      : 'accents',
                             inputValue: '1',
                             id        : 'checkbox',
@@ -96,13 +96,17 @@ Ext.define('TypinApp.view.typing.Widget',{
                             cls: 'display-field',
                             padding: '0 0 0 10'
                         }),
+                        me.inactiveDisplay = new Ext.form.field.Display({
+                            padding: '0 0 0 10',
+                            disabled: true
+                        }),
                         me.textarea = new Ext.form.field.TextArea({
                             disabled: true,
                             emptyText: 'Start typing...',
                             listeners: {
                                 change: 'isTyping'
                             }
-                        })
+                       })
                     ]
                 },
                 me.resultWindow = new Ext.window.Window({
