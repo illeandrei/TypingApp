@@ -8,6 +8,14 @@
     }
   }
 
+  .inactive-field {
+    .x-form-display-field,
+    .x-form-display-field-default {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+  }
+
   .change-green {
     color: green;
     border: 1px solid grey;

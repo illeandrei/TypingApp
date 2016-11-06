@@ -1,7 +1,7 @@
 var index = 0,
+    nextVerse = 1,
     errorCount = 0,
     originalValue,
-    displayedValue,
     correctValue,
     verses = [];
 
@@ -44,13 +44,13 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     appendText: function () {
-        var me = this,
-            view = me.getView();
+        var view = this.getView(),
+            activeValue = originalValue.concat(" " + verses[nextVerse]);
 
-        originalValue = verses[0].concat(" " + me.removeAccentsL(verses[1]));
-
-        view.displayField.setValue(originalValue);
-        view.inactiveDisplay.setValue(me.removeAccentsL(verses[2]))
+        view.displayField.setValue(activeValue);
+        view.inactiveDisplay.setValue(verses[nextVerse + 1]);
+        nextVerse++;
+        originalValue = activeValue;
     },
 
     resetValue: function () {
@@ -149,11 +149,10 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         var me = this,
             view = this.getView(),
             vers = [],
-            accents = view.accentsCheckBox.getValue();
             params = view.comboForm.getForm().getValues();
 
         me.togglePanel(false);
-        
+
         Ext.apply(params, {
             action: 'get_chapter',
             references: true,
@@ -169,36 +168,32 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         });
 
         store.load(function (records) {
-            console.warn('records: ', records); 
-            me.manageData(accents, records);
+            console.warn('records: ', records);
+            me.manageData(records);
         });
     },
 
-    manageData: function (accents, records) {
-        verses = [];
+    manageData: function (records) {
         var me = this,
             view = me.getView(),
-            data = records[0].get('data');
+            data = records[0].get('data'),
+            accents = view.accentsCheckBox.getValue();
 
         data.forEach(function (array) {
-            verses.push(array[3]);
+            if(accents){
+                verses.push(array[3]);
+            } else {
+                verses.push(me.removeAccentsL(array[3]))
+            }
         });
 
         Ext.Function.defer(function () {
             view.textarea.enable();
             view.textarea.focus();
-            if(accents){
-                me.displayText(verses[0], verses[1]);
-            } else {
-                me.displayText(me.removeAccentsL(verses[0]), me.removeAccentsL(verses[1]));
-            }
+            originalValue = verses[0];
+            view.displayField.setValue(originalValue);
+            view.inactiveDisplay.setValue(verses[1]);
         }, 500);
-    },
-    
-    displayText: function (firstSection, secondSection) {
-        var view = this.getView();
-        view.displayField.setValue(firstSection);
-        view.inactiveDisplay.setValue(secondSection);
     },
 
     removeAccentsL: function(str) {

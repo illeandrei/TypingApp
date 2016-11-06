@@ -97,6 +97,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                             padding: '0 0 0 10'
                         }),
                         me.inactiveDisplay = new Ext.form.field.Display({
+                            cls: 'inactive-field',
                             padding: '0 0 0 10',
                             disabled: true
                         }),
