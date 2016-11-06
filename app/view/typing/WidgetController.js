@@ -50,7 +50,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         });
 
         store.load(function (records) {
-            console.warn('records: ', records);
             me.manageData(records);
         });
     },
@@ -102,10 +101,6 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         me.togglePanel(false);
 
         //TODO: remove span if value is empty
-        /*if(newValue == ''){
-            console.warn('new value now: ', newValue);
-            me.resetValue();
-        }*/
 
         if(index == 0){
             originalValue = view.displayField.getValue();
