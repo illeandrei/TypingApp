@@ -25,9 +25,14 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     selectChapter: function (combo, record) {
         var me = this,
             view = this.getView(),
-            vers = [],
             params = view.comboForm.getForm().getValues();
 
+
+        index = 0;
+        nextVerse = 1;
+        errorCount = 0;
+        verses = [];
+        view.textarea.setValue();
         me.togglePanel(false);
 
         Ext.apply(params, {
@@ -102,11 +107,12 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             me.resetValue();
         }*/
 
-        // if(index == 0){
-        //     originalValue = view.displayField.getValue();
-        // } else {
-        //     me.resetValue();
-        // }
+        if(index == 0){
+            originalValue = view.displayField.getValue();
+            me.startTimer();
+        } else {
+            me.resetValue();
+        }
 
         if(originalValue.substring(0, newValue.length) == newValue.substring(0)){
             index++;
@@ -118,10 +124,16 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         }
 
         if(newValue.length == originalValue.length){
-            //TODO: trigger on some other condition
-            // me.showResults();
             me.appendText();
         }
+    },
+
+    startTimer: function () {
+        var me = this;
+        console.warn('start timer!: ');
+        Ext.Function.defer(function () {
+            me.showResults();
+        }, 60000)
     },
 
     changeColor: function (newValue, mistyped) {
@@ -169,16 +181,14 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             chapterCombo = Ext.getCmp('chapterCombo'),
             textarea     = view.textarea;
 
-        //TODO: see if my 'originalValue' can be replaced
-        view.resultWindow.close();
-        textarea.setValue(textarea.originalValue);
-        me.resetValue();
+        view.resultWindow.hide();
+        textarea.setValue();
         me.togglePanel(true);
         chapterCombo.focus(null, 500);
     },
 
-    wordsMinute: function () {
-        return originalValue
+    getWordsMinute: function () {
+        return correctValue
             .split(/(\s+)/)
             .filter(function (word) {
                 return word != ' ';
@@ -190,8 +200,10 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         var me = this,
             view = this.getView();
 
-        // var wordCount = me.wordsMinute();
+        console.warn('wpm: ', me.getWordsMinute());
 
+        // var wordCount = me.wordsMinute();
+        // view.resultForm.getForm().findField('mistyped').setValue(errorCount);
         view.resultWindow.show();
     },
 

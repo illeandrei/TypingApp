@@ -115,9 +115,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                     width: 400,
                     height: 200,
                     keyMapEnabled: true,
-                    bind: {
-                        title: '{resultWindowTitle}'
-                    },
+                    title: 'Result Window',
                     bbar: [
                         '->',
                         {
@@ -127,17 +125,19 @@ Ext.define('TypinApp.view.typing.Widget',{
                         }
                     ],
                     items: [
-                        {
-                            xtype: 'displayfield',
-                            bind: {
-                                fieldLabel: '{errorCount}'
-                            }
-                        },{
-                            xtype: 'displayfield',
-                            bind: {
-                                fieldLabel: '{wordCount}'
-                            }
-                        }
+                        me.resultForm = Ext.form.Panel({
+                            items: [
+                                {
+                                    xtype: 'displayfield',
+                                    name: 'wpm',
+                                    fieldLabel: 'WPM (words/minute): '
+                                },{
+                                    xtype: 'displayfield',
+                                    name: 'mistyped',
+                                    fieldLabel: 'Mistyped characters: '
+                                }
+                            ]
+                        })
                     ]
                 })
             ]
