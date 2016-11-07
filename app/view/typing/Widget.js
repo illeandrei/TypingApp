@@ -107,7 +107,10 @@ Ext.define('TypinApp.view.typing.Widget',{
                             listeners: {
                                 change: 'isTyping'
                             }
-                       })
+                        }),
+                        me.stopwatch = new Ext.form.field.Display({
+                            cls: 'stopwatch'
+                        })
                     ]
                 },
                 me.resultWindow = new Ext.window.Window({

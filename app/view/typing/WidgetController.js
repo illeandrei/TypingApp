@@ -64,7 +64,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             if(accents){
                 verses.push(array[3]);
             } else {
-                verses.push(me.removeAccentsL(array[3]))
+                verses.push(me.removeAccents(array[3]))
             }
         });
 
@@ -77,7 +77,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         }, 500);
     },
 
-    removeAccentsL: function(str) {
+    removeAccents: function(str) {
         var convMap = {
             "ă" : "a",
             "â" : "a",
@@ -103,7 +103,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         //TODO: remove span if value is empty
 
         if(index == 0){
-            originalValue = view.displayField.getValue();
+            originalValue = verses[0];
             me.startTimer();
         } else {
             me.resetValue();
@@ -124,11 +124,22 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     startTimer: function () {
-        var me = this;
+        var me = this,
+            view = me.getView();
+
         console.warn('start timer!: ');
         Ext.Function.defer(function () {
             me.showResults();
-        }, 60000)
+        }, 60000);
+
+        var x = 60;
+
+        Ext.interval(function () {
+            if(x < 1){
+                return;
+            }
+            view.stopwatch.setValue('<h1>' + --x + '</h1>');
+        }, 1000)
     },
 
     changeColor: function (newValue, mistyped) {
@@ -203,8 +214,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     togglePanel: function (show) {
-        var me = this.getView(),
-            panel = Ext.getCmp('northPanel');
+        var panel = Ext.getCmp('northPanel');
 
         if(show){
             panel.expand();
