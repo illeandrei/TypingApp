@@ -118,7 +118,7 @@ Ext.define('TypinApp.view.typing.Widget',{
                     width: 400,
                     height: 200,
                     keyMapEnabled: true,
-                    title: 'Result Window',
+                    title: 'Results',
                     bbar: [
                         '->',
                         {

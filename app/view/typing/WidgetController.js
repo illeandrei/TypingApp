@@ -1,13 +1,17 @@
-var index = 0,
-    nextVerse = 1,
-    errorCount = 0,
-    originalValue,
-    correctValue,
-    verses = [];
-
 Ext.define('TypinApp.view.typing.WidgetController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.typing-widget',
+
+    init: function (view) {
+        var me = this;
+
+        me.index = 0;
+        me.nextVerse = 1;
+        me.errorCount = 0;
+        me.originalValue;
+        me.correctValue;
+        me.verses = [];
+    },
 
     selectBook: function (combo, record) {
         var me = this,
@@ -28,10 +32,10 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             params = view.comboForm.getForm().getValues();
 
 
-        index = 0;
-        nextVerse = 1;
-        errorCount = 0;
-        verses = [];
+        me.index = 0;
+        me.nextVerse = 1;
+        me.errorCount = 0;
+        me.verses = [];
         view.textarea.setValue();
         me.togglePanel(false);
 
@@ -62,18 +66,18 @@ Ext.define('TypinApp.view.typing.WidgetController', {
 
         data.forEach(function (array) {
             if(accents){
-                verses.push(array[3]);
+                me.verses.push(array[3]);
             } else {
-                verses.push(me.removeAccents(array[3]))
+                me.verses.push(me.removeAccents(array[3]))
             }
         });
 
         Ext.Function.defer(function () {
             view.textarea.enable();
             view.textarea.focus();
-            originalValue = verses[0];
-            view.displayField.setValue(originalValue);
-            view.inactiveDisplay.setValue(verses[1]);
+            me.originalValue = me.verses[0];
+            view.displayField.setValue(me.originalValue);
+            view.inactiveDisplay.setValue(me.verses[1]);
         }, 500);
     },
 
@@ -95,30 +99,28 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     isTyping: function (field , newValue) {
-        var me = this,
-            view = me.getView();
-
+        var me = this;
         me.togglePanel(false);
 
         //TODO: remove span if value is empty
 
-        if(index == 0){
-            originalValue = verses[0];
+        if(me.index == 0){
+            me.originalValue = me.verses[0];
             me.startTimer();
         } else {
             me.resetValue();
         }
 
-        if(originalValue.substring(0, newValue.length) == newValue.substring(0)){
-            index++;
-            correctValue = newValue;
+        if(me.originalValue.substring(0, newValue.length) == newValue.substring(0)){
+            me.index++;
+            me.correctValue = newValue;
             me.changeColor(newValue, false);
         } else {
-            errorCount++;
+            me.errorCount++;
             me.changeColor(newValue, true)
         }
 
-        if(newValue.length == originalValue.length){
+        if(newValue.length == me.originalValue.length - 5){
             me.appendText();
         }
     },
@@ -142,42 +144,45 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     changeColor: function (newValue, mistyped) {
-        var view = this.getView(),
+        var me = this,
+            view = me.getView(),
             valueLength = newValue.length;
 
         if(mistyped){
             view.displayField.setValue(
                 '<span class="change-green">' +
-                originalValue.substring(0, correctValue.length) +
+                me.originalValue.substring(0, me.correctValue.length) +
                 '</span>' +
                 '<span class="change-red">' +
-                originalValue.substring(correctValue.length) +
+                me.originalValue.substring(me.correctValue.length) +
                 '</span>'
             );
         } else {
             view.displayField.setValue(
                 '<span class="change-green">' +
-                originalValue.substring(0, valueLength) +
+                me.originalValue.substring(0, valueLength) +
                 '</span>' +
-                originalValue.substring(valueLength)
+                me.originalValue.substring(valueLength)
             );
         }
 
     },
 
     appendText: function () {
-        var view = this.getView(),
-            activeValue = originalValue.concat(" " + verses[nextVerse]);
+        var me = this,
+            view = me.getView(),
+            activeValue = me.originalValue.concat(" " + me.verses[me.nextVerse]);
 
         view.displayField.setValue(activeValue);
-        view.inactiveDisplay.setValue(verses[nextVerse + 1]);
-        nextVerse++;
-        originalValue = activeValue;
+        view.inactiveDisplay.setValue(me.verses[me.nextVerse + 1]);
+        me.nextVerse++;
+        me.originalValue = activeValue;
     },
 
     resetValue: function () {
-        var view = this.getView();
-        view.displayField.setValue(originalValue);
+        var me = this,
+            view = me.getView();
+        view.displayField.setValue(me.originalValue);
     },
 
     restartApp: function () {
@@ -193,7 +198,8 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     },
 
     getWordsMinute: function () {
-        return correctValue
+        var me = this;
+        return me.correctValue
             .split(/(\s+)/)
             .filter(function (word) {
                 return word != ' ';
@@ -208,7 +214,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         console.warn('wpm: ', me.getWordsMinute());
 
         // var wordCount = me.wordsMinute();
-        // view.resultForm.getForm().findField('mistyped').setValue(errorCount);
+        // view.resultForm.getForm().findField('mistyped').setValue(me.errorCount);
         view.resultWindow.show();
     },
 
