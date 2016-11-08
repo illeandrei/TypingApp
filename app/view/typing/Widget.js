@@ -120,7 +120,7 @@ Ext.define('TypinApp.view.typing.Widget',{
 
         me.resultWindow = new Ext.window.Window({
             modal: true,
-            width: 400,
+            width: 300,
             height: 200,
             keyMapEnabled: true,
             title: 'Results',
