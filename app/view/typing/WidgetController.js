@@ -8,8 +8,8 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         me.index = 0;
         me.nextVerse = 1;
         me.errorCount = 0;
-        me.originalValue;
-        me.correctValue;
+        // me.originalValue;
+        // me.correctValue;
         me.verses = [];
     },
 
@@ -120,7 +120,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
             me.changeColor(newValue, true)
         }
 
-        if(newValue.length == me.originalValue.length - 5){
+        if(newValue.length == me.originalValue.length){
             me.appendText();
         }
     },
@@ -128,7 +128,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     startTimer: function () {
         var me = this,
             view = me.getView(),
-            minute = 60;
+            minute = 5;
 
         console.warn('start timer!: ');
         Ext.Function.defer(function () {
@@ -214,7 +214,10 @@ Ext.define('TypinApp.view.typing.WidgetController', {
         console.warn('wpm: ', me.getWordsMinute());
 
         // var wordCount = me.wordsMinute();
-        // view.resultForm.getForm().findField('mistyped').setValue(me.errorCount);
+        view.resultForm.getForm().setValues({
+            wpm: me.getWordsMinute(),
+            mistyped: me.errorCount
+        });
         view.resultWindow.show();
     },
 

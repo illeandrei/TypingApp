@@ -26,6 +26,20 @@
     color: red;
   }
 
+  .wpm {
+    .x-form-display-field {
+      font-size: 30px;
+      color: green;
+    }
+  }
+
+  .mistyped {
+    .x-form-display-field {
+      font-size: 15px;
+      color: red;
+    }
+  }
+
   .stopwatch {
     text-align: center;
   }

@@ -112,41 +112,49 @@ Ext.define('TypinApp.view.typing.Widget',{
                             cls: 'stopwatch'
                         })
                     ]
-                },
-                me.resultWindow = new Ext.window.Window({
-                    modal: true,
-                    width: 400,
-                    height: 200,
-                    keyMapEnabled: true,
-                    title: 'Results',
-                    bbar: [
-                        '->',
-                        {
-                            xtyep: 'button',
-                            text: 'OK',
-                            handler: 'restartApp'
-                        }
-                    ],
-                    items: [
-                        me.resultForm = Ext.form.Panel({
-                            items: [
-                                {
-                                    xtype: 'displayfield',
-                                    name: 'wpm',
-                                    fieldLabel: 'WPM (words/minute): '
-                                },{
-                                    xtype: 'displayfield',
-                                    name: 'mistyped',
-                                    fieldLabel: 'Mistyped characters: '
-                                }
-                            ]
-                        })
-                    ]
-                })
+                }
             ]
         });
 
         me.callParent();
+
+        me.resultWindow = new Ext.window.Window({
+            modal: true,
+            width: 400,
+            height: 200,
+            keyMapEnabled: true,
+            title: 'Results',
+            bbar: [
+                '->',
+                {
+                    xtyep: 'button',
+                    text: 'OK',
+                    handler: 'restartApp'
+                }
+            ],
+            items: [
+                me.resultForm = new Ext.form.Panel({
+                    defaults: {
+                        padding: 10,
+                        labelAlign: 'left',
+                        labelWidth: 200
+                    },
+                    items: [
+                        {
+                            xtype: 'displayfield',
+                            name: 'wpm',
+                            fieldLabel: 'WPM (words/minute)',
+                            cls: 'wpm'
+                        },{
+                            xtype: 'displayfield',
+                            name: 'mistyped',
+                            fieldLabel: 'Mistyped characters',
+                            cls: 'mistyped'
+                        }
+                    ]
+                })
+            ]
+        });
     },
 
     initEvents: function () {
