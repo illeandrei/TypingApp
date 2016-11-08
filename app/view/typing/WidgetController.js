@@ -128,7 +128,7 @@ Ext.define('TypinApp.view.typing.WidgetController', {
     startTimer: function () {
         var me = this,
             view = me.getView(),
-            minute = 5;
+            minute = 60;
 
         console.warn('start timer!: ');
         Ext.Function.defer(function () {
